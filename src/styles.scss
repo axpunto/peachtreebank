@@ -1,0 +1,22 @@
+html {
+  padding: 100px;
+}
+
+body {
+  background-image: url('./assets/background.jpg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: left bottom;
+}
+
+@media screen and (max-width: 900px) {
+  html {
+    padding: 100px 30px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  html {
+    padding: 100px 10px;
+  }
+}

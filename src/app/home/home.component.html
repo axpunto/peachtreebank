@@ -1,0 +1,65 @@
+<div class="modal-bg" *ngIf="modalConfig.show">
+  <div class="modal-card">
+    <header>Online transaction</header>
+    <div class="advice" [ngClass]="[!modalConfig.approved ? 'unable' : 'able']">{{ modalConfig.title }}</div>
+    <p>
+      Amount: <b [ngStyle]="{ 'color': (!modalConfig.approved ? 'red' : 'black') }">{{ modalConfig.amount | currency:'USD' }}</b>
+      <br>To account: {{ modalConfig.merchant }}
+    </p>
+    <div *ngIf="modalConfig.approved">Your final balance will be {{ checkBalance | currency:'USD' }}</div>
+    <div class="action-buttons">
+      <button class="edit" (click)="editTransfer(modalConfig)">Back to edit</button>
+      <button class="transfer" (click)="acceptTransfer(modalConfig)" *ngIf="modalConfig.approved">Transfer</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="form-card">
+    <div class="heading">
+      <label>Make a transfer</label>
+    </div>
+    <form class="form-fields" #transferForm="ngForm" (ngSubmit)="processTransfer(transferForm)">
+      <h5>FORM ACCOUNT</h5>
+      <input [disabled]=true type="text" placeholder="Free Checking(4692) {{balance | currency:'USD'}}">
+      <h5>TO ACCOUNT</h5>
+      <input required type="text" name="toAccount" placeholder="Georgia Power Electronic Company" ngModel>
+      <h5>AMOUNT</h5>
+      <input required type="number" name="amount" placeholder="$ 0.00" ngModel>
+      <div class="btn-container">
+        <button type="submit" value="submit" [disabled]='!transferForm.valid'>SUBMIT</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="history-card">
+    <div class="heading">
+      <label>Recent Transactions</label>
+    </div>
+
+    <section class="filter-control">
+      <div class="search">
+        <input type="text" placeholder="Search by typing..." [(ngModel)]="searchText">
+      </div>
+      <div class="sort">
+        <label>Sort by</label>
+        <button>DATE</button>
+        <button>BENEFICIARY</button>
+        <button>AMOUNT</button>
+      </div>
+    </section>
+
+    <section class="data-history-container" *ngFor="let data of accountHistory | filter : searchText">
+      <span class="ribbon-config" [ngStyle]="{ 'background-color': data.categoryCode }"></span>
+      <div class="left-column">
+        <span class="date">{{ data.transactionDate | date }}</span>
+        <img height="40" src="{{ data.merchantLogo }}">
+        <div>
+          <span class="account">{{ data.merchant }}</span>
+          <br/><small>{{ data.transactionType }}</small>
+        </div>
+      </div>
+      <div class="right-column">-${{ data.amount }}</div>
+    </section>
+  </div>
+</div>
